@@ -1,43 +1,27 @@
 import React, { Component } from 'react'
-import { addRecipe } from '../actions'
+import { connect } from 'react-redux'
 
 class App extends Component {
-  state = { calendar: null }
-
-  componentDidMount () {
-    const { store } = this.props
-    store.subscribe(() => (
-      this.setState({ calendar: store.getState() })
-    ))
-  }
-
-  submitFood = () => {
-    this.props.store.dispatch(addRecipe({
-      day: 'monday',
-      meal: 'breakfast',
-      recipe: { label: this.input.value }
-    }))
-    this.input.value = ''
-  }
-
   render () {
     return (
       <div>
-        <input
-          type='text'
-          placeholder={`Monday's Breakfast`}
-          ref={input => this.input = input}
-        />
-        <button onClick={this.submitFood}>Submit</button>
-
-        <pre>
-          Monday's Breakfast: {
-            this.state.calendar && this.state.calendar.monday.breakfast
-          }
-        </pre>
+        hello
       </div>
     )
   }
 }
 
-export default App
+function mapState (calendar) {
+  const days = [
+    'sunday', 'monday', 'tuesday', 'wednesday',
+    'thursday', 'friday', 'saturday'
+  ]
+  return {
+    calendar: days.map(day => ({
+      day,
+      meals: { ...calendar[day] }
+    }))
+  }
+}
+
+export default connect(mapState)(App)
