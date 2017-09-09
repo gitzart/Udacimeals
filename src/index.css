@@ -14,6 +14,10 @@ li {
   list-style-type: none;
 }
 
+button {
+  color: #ccc;
+}
+
 .container {
   margin: 0 auto;
   max-width: 1070px;
@@ -95,7 +99,7 @@ li {
   left: 0px;
   right: 0px;
   bottom: 0px;
-  background-color: rgba(255, 255, 255, 0.75);
+  background-color: rgba(37, 37, 37, 0.75);
 }
 
 .modal {
@@ -104,8 +108,8 @@ li {
   left: 200px;
   right: 200px;
   bottom: 40px;
-  border: 1px solid rgb(204, 204, 204);
-  background: rgb(255, 255, 255);
+  border: 1px solid rgb(57, 57, 57);
+  background: rgb(37, 37, 37);
   overflow: auto;
   border-radius: 4px;
   outline: none;
