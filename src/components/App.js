@@ -9,6 +9,7 @@ import { addRecipe, removeFromCalendar } from '../actions'
 import { capitalize } from '../utils/helpers'
 import * as API from '../utils/api'
 import FoodList from './FoodList'
+import ShoppingList from './ShoppingList'
 
 class App extends Component {
   state = {
@@ -16,7 +17,8 @@ class App extends Component {
     meal: null,
     day: null,
     food: null,
-    loadingFood: false
+    loadingFood: false,
+    ingredientModalOpen: false,
   }
 
   openFoodModal = ({ meal, day }) => (
@@ -60,13 +62,48 @@ class App extends Component {
     this.closeFoodModal()
   }
 
+  openIngredientModalOpen = () => (
+    this.setState({ ingredientModalOpen: true })
+  )
+
+  closeIngredientModalOpen = () => (
+    this.setState({ ingredientModalOpen: false })
+  )
+
+  generateShoppingList = () => {
+    return this.props.calendar
+      .reduce((result, { meals }) => {
+        const { breakfast, lunch, dinner } = meals
+
+        breakfast && result.push(breakfast)
+        lunch && result.push(lunch)
+        dinner && result.push(dinner)
+
+        return result
+      }, [])
+      .reduce((ings, { ingredientLines }) => {
+        return [ ...ings, ...ingredientLines ]
+      }, [])
+  }
+
   render () {
     const { calendar, remove } = this.props
-    const { foodModalOpen, loadingFood, food } = this.state
+    const {
+      foodModalOpen, loadingFood, food, ingredientModalOpen
+    } = this.state
     const mealOrder = ['breakfast', 'lunch', 'dinner']
 
     return (
       <div className='container'>
+        <div className='nav'>
+          <h1 className='header'>UdaciMeals</h1>
+          <button
+            className='shopping-list'
+            onClick={this.openIngredientModalOpen}>
+              Shopping List
+          </button>
+        </div>
+
         <ul className='meal-types'>
           {mealOrder.map(mealType => (
             <li key={mealType} className='subheader'>
@@ -155,6 +192,18 @@ class App extends Component {
                   )}
                 </div>}
           </div>
+        </Modal>
+
+        <Modal
+          className='modal'
+          overlayClassName='overlay'
+          isOpen={ingredientModalOpen}
+          onRequestClose={this.closeIngredientModalOpen}
+          contentLabel='Modal'
+        >
+          {ingredientModalOpen && (
+            <ShoppingList list={this.generateShoppingList()} />
+          )}
         </Modal>
       </div>
     )
